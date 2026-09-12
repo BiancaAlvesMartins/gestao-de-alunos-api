@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import 'dotenv/config';
 import { readFileSync } from 'fs';
 import { getToken } from '../../helpers/authHelper.js';
 
