@@ -1,0 +1,16 @@
+{
+  "admin": {
+    "email": "admin@escola.com",
+    "senha": "admin123"
+  },
+  "aluno": {
+    "nome": "Valentina Camargo",
+    "email": "valentina.camargo.1004@teste.com",
+    "senha": "Senha123!*",
+    "matricula": "20260911"
+  },
+  "trabalho": {
+    "titulo": "Trabalho de Conclusão de Testes de API",
+    "descricao": "Testes automatizados desenvolvidos por Bianca com Mocha, Supertest e Chai"
+  }
+}
