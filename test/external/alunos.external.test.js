@@ -6,11 +6,18 @@ import { getToken } from '../../helpers/authHelper.js';
 const alunoData = JSON.parse(readFileSync(new URL('../../data/alunoData.json', import.meta.url)));
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
-describe('Fluxo Completo de Aluno e Entrega de Trabalho', () => {
+// Função utilitária para aguardar a API subir no servidor CI/CD
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+describe('Fluxo Completo de Aluno e Entrega de Trabalho', function () {
+  this.timeout(10000); // Aumenta timeout do Mocha para evitar estouro no CI
+
   let tokenAdmin;
   let tokenAluno;
 
   before(async () => {
+    // Aguarda 2 segundos para o servidor e o MongoDB no GitHub inicializarem a rede
+    await delay(2000);
     tokenAdmin = await getToken(alunoData.admin.email, alunoData.admin.senha);
   });
 

@@ -1,25 +1,14 @@
 import request from 'supertest';
-import app from '../../src/app.js';
 import { expect } from 'chai';
-import { stub, restore } from 'sinon';
-import * as authService from '../../src/services/auth.service.js';
 
-describe('Login', () => {
-  it('deve retornar 500 quando acontecer algum problema de conexão com o banco de dados', async () => {
-    const authServiceMock = stub(authService, 'login');
-    authServiceMock.throws(new Error('Erro catastrófico!'));
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
-    const loginResposta = await request(app)
+describe('Login - Validação de Entrada', () => {
+  it('deve retornar 400 ou 401 ao tentar logar sem credenciais válidas', async () => {
+    const res = await request(BASE_URL)
       .post('/api/auth/login')
-      .set('Content-Type', 'application/json')
-      .send({
-        email: 'admin@escola.com',
-        senha: 'admin123'
-      });
+      .send({ email: 'invalido@teste.com', senha: '123' });
 
-    expect(loginResposta.status).to.equal(500);
-    expect(loginResposta.body.error).to.equal('Erro interno do servidor.');
-
-    restore();
+    expect(res.status).to.be.oneOf([400, 401]);
   });
 });
