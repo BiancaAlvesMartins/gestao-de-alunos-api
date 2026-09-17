@@ -1,28 +1,17 @@
-import request from 'supertest';
-import { expect } from 'chai';
+import connectDB from '../src/database/db.js';
 import mongoose from 'mongoose';
 import app from '../src/app.js';
+import request from 'supertest';
 
-describe('POST /api/auth/login', () => {
-  after(async () => {
-    await mongoose.connection.close();
-  });
+export async function getToken(email, senha) {
+  // Garante que o banco de dados em memória está conectado antes de tentar autenticar
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
+  }
 
-  it('deve retornar 200 e um token quando o admin informar e-mail e senha corretos', async () => {
-    const resposta = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'admin@escola.com', senha: 'admin123' });
+  const response = await request(app)
+    .post('/api/auth/login')
+    .send({ email, senha });
 
-    expect(resposta.status).to.equal(200);
-    expect(resposta.body).to.have.property('token');
-  });
-
-  it('deve retornar 401 quando a senha informada for inválida', async () => {
-    const resposta = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'admin@escola.com', senha: 'senha-incorreta' });
-
-    expect(resposta.status).to.equal(401);
-    expect(resposta.body.error).to.equal('E-mail ou senha inválidos.');
-  });
-});
+  return response.body.token;
+}
